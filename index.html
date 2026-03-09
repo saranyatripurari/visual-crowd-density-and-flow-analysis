@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Visual Crowd Density & Flow Analysis</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<h2>Visual Crowd Density and Flow Analysis</h2>
+
+<div class="upload">
+    <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept="image/*,video/*" required>
+        <button type="submit" class="btn-primary">Analyze</button>
+    </form>
+</div>
+
+<div id="loader" class="loader"></div>
+
+<div class="container">
+
+    <div class="box">
+        <h3>Input Image / Video</h3>
+        {% if input_path %}
+            {% if is_video %}
+                <video controls class="img-preview">
+                    <source src="{{ input_path }}">
+                </video>
+            {% else %}
+                <img src="{{ input_path }}" class="img-preview">
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <div class="box">
+        <h3>Density Map & Flow</h3>
+        {% if output_path %}
+            <img src="{{ output_path }}" class="img-preview">
+            <div class="result">
+                Total Crowd Count: {{ crowd_count }}
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

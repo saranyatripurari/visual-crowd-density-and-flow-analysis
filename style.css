@@ -1,0 +1,71 @@
+body {
+    background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h2 {
+    text-align: center;
+    color: #00796b;
+    margin-top: 20px;
+}
+
+.container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+}
+
+.box {
+    flex: 1;
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+.upload {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.btn-primary {
+    background-color: #00796b;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #004d40;
+}
+
+.img-preview {
+    width: 100%;
+    margin-top: 10px;
+    border-radius: 10px;
+}
+
+.result {
+    font-size: 24px;
+    color: #004d40;
+    margin-top: 15px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.loader {
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #00796b;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+    display: none;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
