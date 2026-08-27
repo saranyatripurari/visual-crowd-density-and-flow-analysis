@@ -105,3 +105,21 @@ Visual-Crowd-Density-and-Flow-Analysis/
 ├── requirements.txt
 ├── .gitignore
 └── README.md
+
+⚙️ How to Run Locally
+1. Clone the repository
+git clone https://github.com/saranyatripurari/visual-crowd-density-and-flow-analysis.git
+2. Navigate to the project
+cd visual-crowd-density-and-flow-analysis
+3. Install dependencies
+pip install -r requirements.txt
+4. Run the application
+python backend/app.py
+5. Open in browser
+http://127.0.0.1:5000
+
+Author
+
+Saranya Tripurari
+
+GitHub: https://github.com/saranyatripurari
