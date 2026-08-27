@@ -134,4 +134,14 @@ Visual-Crowd-Density-and-Flow-Analysis/
 - **Start Command**: `uvicorn backend.app:app --host 0.0.0.0 --port $PORT`
   *(or `gunicorn backend.app:app -w 1 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT`)*
 
+## Author
 
+Saranya Tripurari
+
+Email: saranyatripurari@gmail.com
+
+GitHub:
+https://github.com/saranyatripurari
+
+LinkedIn:
+https://www.linkedin.com/in/saranyatripurari
