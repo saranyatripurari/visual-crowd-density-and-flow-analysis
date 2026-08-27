@@ -1,17 +1,23 @@
+# ── Web framework ──────────────────────────────────────────────────────────────
 fastapi>=0.100.0
 uvicorn[standard]>=0.22.0
 python-multipart>=0.0.6
 jinja2>=3.1.2
+gunicorn>=21.0.0
 
-torch>=2.0.0
-torchvision>=0.15.0
+# ── CPU-only PyTorch (avoids 3 GB of CUDA/NVIDIA packages on Render) ──────────
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.2.2+cpu
+torchvision==0.17.2+cpu
 
+# ── Scientific / CV stack ──────────────────────────────────────────────────────
 numpy>=1.23.0
 scipy>=1.10.0
 opencv-python-headless>=4.7.0
-
-requests>=2.31.0
 matplotlib>=3.7.0
+
+# ── AI models ─────────────────────────────────────────────────────────────────
 ultralytics>=8.0.0
 
-gunicorn>=21.0.0
+# ── HTTP ──────────────────────────────────────────────────────────────────────
+requests>=2.31.0

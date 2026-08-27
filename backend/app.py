@@ -8,9 +8,6 @@ from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from backend.inference import CrowdAnalyzer
-from backend.video_crowd_system import VideoAnalyzer
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 UPLOADS_DIR = os.path.join(BASE_DIR, "uploads")
 OUTPUTS_DIR = os.path.join(BASE_DIR, "outputs")
@@ -36,11 +33,57 @@ app.mount("/outputs", StaticFiles(directory=OUTPUTS_DIR), name="outputs")
 
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
-print("[Server] Initializing analyzers...")
-image_analyzer = CrowdAnalyzer()
-video_analyzer = VideoAnalyzer()
-print("[Server] Analyzers ready")
+# ── Lazy-loaded singletons ────────────────────────────────────────────────────
+# Models are NOT loaded at import time. They are initialised on the first
+# request that needs them and then reused. This keeps idle RAM low on Render.
 
+_image_analyzer = None
+_video_analyzer = None
+_shared_yolo = None   # single YOLO instance shared by both analyzers
+
+
+def _get_shared_yolo():
+    """Return the shared YOLOv8n detector, loading it only once."""
+    global _shared_yolo
+    if _shared_yolo is None:
+        from ultralytics import YOLO
+        print("[Server] Loading shared YOLOv8n detector...")
+        _shared_yolo = YOLO("yolov8n.pt")
+        print("[Server] YOLOv8n ready")
+    return _shared_yolo
+
+
+def get_image_analyzer():
+    """Return the CrowdAnalyzer singleton, creating it on first call."""
+    global _image_analyzer
+    if _image_analyzer is None:
+        print("[Server] Initialising CrowdAnalyzer (image)...")
+        from backend.inference import CrowdAnalyzer
+        _image_analyzer = CrowdAnalyzer()
+        # Share the already-loaded YOLO detector to avoid a second load
+        yolo = _get_shared_yolo()
+        if _image_analyzer.detector is None:
+            _image_analyzer.detector = yolo
+        print("[Server] CrowdAnalyzer ready")
+    return _image_analyzer
+
+
+def get_video_analyzer():
+    """Return the VideoAnalyzer singleton, creating it on first call."""
+    global _video_analyzer
+    if _video_analyzer is None:
+        print("[Server] Initialising VideoAnalyzer (video)...")
+        from backend.video_crowd_system import VideoAnalyzer
+        _video_analyzer = VideoAnalyzer()
+        # Share the already-loaded YOLO detector to avoid a second load
+        yolo = _get_shared_yolo()
+        if hasattr(_video_analyzer, "detector"):
+            _video_analyzer.detector = yolo
+        print("[Server] VideoAnalyzer ready")
+    return _video_analyzer
+
+
+# ── Routes ────────────────────────────────────────────────────────────────────
 
 @app.get("/")
 async def home(request: Request):
@@ -51,7 +94,6 @@ async def home(request: Request):
 async def health():
     return {
         "status": "healthy",
-        "device": str(getattr(image_analyzer, "device", "cpu")),
         "model_architecture": "CSRNet (Dilated VGG16 Backend) + YOLOv8",
         "video_system": "YOLOv8 Temporal Motion Analysis"
     }
@@ -69,7 +111,7 @@ async def predict_image(file: UploadFile = File(...)):
         with open(filepath, "wb") as output_file:
             shutil.copyfileobj(file.file, output_file)
 
-        result = image_analyzer.analyze_image(filepath, output_dir=OUTPUTS_DIR)
+        result = get_image_analyzer().analyze_image(filepath, output_dir=OUTPUTS_DIR)
         if not result.get("success"):
             return JSONResponse({
                 "success": False,
@@ -116,7 +158,7 @@ async def predict_video(file: UploadFile = File(...)):
         with open(filepath, "wb") as output_file:
             shutil.copyfileobj(file.file, output_file)
 
-        result = video_analyzer.analyze_video(filepath)
+        result = get_video_analyzer().analyze_video(filepath)
         estimated_people = int(result["people_count"])
         moving_pct = int(result["moving_pct"])
         stationary_pct = int(result["stationary_pct"])
