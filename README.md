@@ -1,54 +1,118 @@
-# Visual Crowd Density and Flow Analysis
+Visual Crowd Density and Flow Analysis
 
-A FastAPI application for crowd counting from images and crowd movement analysis from videos.
+An end-to-end Computer Vision and Deep Learning web application that performs crowd counting from images and crowd movement analysis from videos.
 
-## Structure
+Project Overview
 
-```text
-crowdDensity/
+This project is designed to analyze crowded images and videos using deep learning and computer vision techniques.
+
+The image analysis component predicts the number of people in an image and generates a crowd density map.
+
+The video analysis component detects and tracks people and analyzes their movement using optical flow and tracking techniques.
+
+The application provides an interactive web interface where users can upload images or videos and view the analysis results.
+
+Features
+
+Crowd counting from images
+Crowd density map generation
+Image analysis using CSRNet
+Video crowd detection
+Person tracking
+Crowd movement analysis
+Optical flow-based movement analysis
+Stationary movement detection
+Left, Right, Forward and Backward movement analysis when significant movement is detected
+Image and video upload through web interface
+Generated analysis results
+Machine Learning & Computer Vision
+
+The project uses CSRNet for crowd counting and density-map generation.
+
+For video analysis, the system uses computer vision techniques including:
+
+Person Detection
+Object Tracking
+Optical Flow
+Movement Analysis
+
+The video system is designed to avoid treating small movements as dominant directional movement. When people are mostly stationary, the output is considered Stationary.
+
+Dataset
+
+The crowd counting model is based on the ShanghaiTech Crowd Counting Dataset.
+
+The project includes:
+
+ShanghaiTech Part A
+ShanghaiTech Part B
+
+Tech Stack
+
+Programming Language
+Python
+Deep Learning & Computer Vision
+PyTorch
+OpenCV
+CSRNet
+NumPy
+SciPy
+Backend
+Flask
+Frontend
+HTML5
+CSS3
+JavaScript
+
+Project Structure
+
+Visual-Crowd-Density-and-Flow-Analysis/
+│
 ├── frontend/
-│   ├── templates/index.html
+│   ├── templates/
+│   │   └── index.html
 │   └── static/
-│       ├── css/style.css
-│       └── js/app.js
+│       ├── css/
+│       │   └── style.css
+│       └── js/
+│           └── app.js
+│
 ├── backend/
-│   ├── app.py                  # API and frontend connection
-│   ├── inference.py            # Image analysis and density-map output
-│   ├── video_crowd_system.py   # Video detection, tracking, and flow analysis
-│   ├── density_map.py          # Density-map utilities
-│   └── model/csrnet.py         # CSRNet architecture and loader
-├── models/                     # Model checkpoints
-├── part_A_final/               # ShanghaiTech Part A data
-├── part_B_final/               # ShanghaiTech Part B data
-├── outputs/                    # Runtime and test output files
+│   ├── app.py
+│   ├── inference.py
+│   ├── video_crowd_system.py
+│   ├── density_map.py
+│   └── model/
+│       └── csrnet.py
+│
+├── models/
+│
+├── part_A_final/
+│
+├── part_B_final/
+│
+├── outputs/
+│
 ├── requirements.txt
+├── .gitignore
 └── README.md
-```
 
-## Run
+⚙️ How to Run Locally
 
-Install dependencies:
-
-```bash
+1. Clone the repository
+git clone https://github.com/saranyatripurari/visual-crowd-density-and-flow-analysis.git
+2. Navigate to the project
+cd visual-crowd-density-and-flow-analysis
+3. Install dependencies
 pip install -r requirements.txt
-```
+4. Run the application
+python backend/app.py
+5. Open in browser
+http://127.0.0.1:5000
 
-Start the server:
+Author
 
-```bash
-python -m backend.app
-```
+Saranya Tripurari
 
-Open `http://127.0.0.1:8000` in a browser.
+GitHub: https://github.com/saranyatripurari
 
-## API
-
-- `GET /health` checks the server and loaded models.
-- `POST /predict/image` accepts JPG, JPEG, PNG, or WEBP files.
-- `POST /predict/video` accepts MP4, AVI, MOV, MKV, or WEBM files.
-
-The image pipeline generates a people count, density map, and annotated output. The video pipeline reports the estimated crowd count, movement status, and dominant flow direction.
-
-## Notes
-
-`model/` contains source code. `models/` contains trained or downloaded weights. `outputs/` is the single location for generated results. Training and evaluation scripts are not included in the compact runtime version.
