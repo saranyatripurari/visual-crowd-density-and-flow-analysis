@@ -1,6 +1,7 @@
 # Visual Crowd Density and Flow Analysis
 
 An end-to-end **Computer Vision and Deep Learning web application** that performs crowd counting from images and crowd movement analysis from videos.
+
 Live Demo : https://visual-crowd-density-and-flow-analysis.onrender.com
 
 ## Project Overview
