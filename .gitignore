@@ -18,10 +18,12 @@ ENV/
 *.cache
 
 # Runtime generated files
-uploads/*
-outputs/*
+uploads/**
+outputs/**
 
 # Keep the folders but ignore their generated contents
+!uploads/
+!outputs/
 !uploads/.gitkeep
 !outputs/.gitkeep
 
