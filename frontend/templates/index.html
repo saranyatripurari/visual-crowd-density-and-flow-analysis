@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Crowd Density &amp; Flow Analysis</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=5">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Visual Crowd Density &amp; Flow Analysis</h1>
+        </header>
+
+        <div class="card">
+            <div class="mode-buttons">
+                <button type="button" class="btn-mode active" id="btnModeImage" onclick="selectMode('image')">📸 Image Analysis</button>
+                <button type="button" class="btn-mode" id="btnModeVideo" onclick="selectMode('video')">🎥 Video Stream Analysis</button>
+            </div>
+
+            <form id="uploadForm" onsubmit="submitAnalysis(event)">
+                <input type="file" id="fileInput" name="file" accept="image/*" style="display: none;" onchange="onFileChosen(event)">
+
+                <div class="upload-box" id="uploadBox" onclick="openFilePicker()">
+                    <div id="uploadPrompt">
+                        <div class="upload-icon">⬆️</div>
+                        <p class="upload-text" id="uploadText">Click or Drag &amp; Drop a Crowd Image</p>
+                        <span class="file-hint" id="fileHint">Supported formats: JPG, PNG, WEBP</span>
+                    </div>
+
+                    <div id="previewContainer" style="display: none;">
+                        <img id="imagePreview" src="" alt="Selected image preview">
+                        <video id="videoPreview" src="" controls></video>
+                    </div>
+
+                </div>
+
+                <button type="submit" class="btn-analyze" id="btnAnalyze" disabled>Analyze Crowd</button>
+            </form>
+
+            <div class="loading-box" id="loadingBox" style="display: none;">
+                <div class="spinner"></div>
+                <p>Analyzing Crowd Features...</p>
+            </div>
+
+            <div class="error-msg" id="errorMsg" style="display: none;"></div>
+        </div>
+
+        <div class="card result-card" id="resultCard" style="display: none;">
+            <div class="people-count-display">
+                <span class="count-text">Estimated People: <span class="count-val" id="metricCount">--</span></span>
+            </div>
+
+            <div id="imageResultView" style="display: none;">
+                <div class="view-tabs">
+                    <button class="view-tab active" onclick="switchImageView('sideBySide')">Side-by-Side View</button>
+                    <button class="view-tab" onclick="switchImageView('densityOnly')">Human Density Map</button>
+                </div>
+
+                <div class="image-display-container">
+                    <div id="viewSideBySide" class="active-view">
+                        <div class="image-comparison">
+                            <div class="image-column">
+                                <span class="column-title">Original Image</span>
+                                <div class="img-frame">
+                                    <img id="resOriginal" src="" alt="Original Crowd Image">
+                                </div>
+                            </div>
+                            <div class="image-column">
+                                <span class="column-title">Human Density Map</span>
+                                <div class="img-frame">
+                                    <img id="resDensity" src="" alt="Human Density Map">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="viewDensityOnly" class="view-pane" style="display: none;">
+                        <span class="column-title">Human Density Map / Heatmap</span>
+                        <div class="img-frame">
+                            <img id="resDensitySolo" src="" alt="Human Density Map / Heatmap">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="videoResultView" style="display: none;">
+                <div class="flow-analysis-section">
+                    <h3 class="flow-section-heading">Crowd Flow Direction</h3>
+
+                    <div id="flowStatsContainer">
+                        <div class="direction-list-clean" id="directionListClean">
+                            <div class="dir-item"><span class="dir-arrow">→</span> <span class="dir-name">Right:</span> <span class="dir-val" id="pctRight">0%</span></div>
+                            <div class="dir-item"><span class="dir-arrow">←</span> <span class="dir-name">Left:</span> <span class="dir-val" id="pctLeft">0%</span></div>
+                            <div class="dir-item"><span class="dir-arrow">↑</span> <span class="dir-name">Forward:</span> <span class="dir-val" id="pctForward">0%</span></div>
+                            <div class="dir-item"><span class="dir-arrow">↓</span> <span class="dir-name">Backward:</span> <span class="dir-val" id="pctBackward">0%</span></div>
+                            <div class="dir-item dir-item--stationary"><span class="dir-arrow">⏸</span> <span class="dir-name">Stationary:</span> <span class="dir-val" id="pctStationary">0%</span></div>
+                            <div class="dir-item dir-item--moving"><span class="dir-arrow">🚶</span> <span class="dir-name">Moving:</span> <span class="dir-val" id="pctMoving">0%</span></div>
+                        </div>
+
+                        <div class="dominant-direction-card">
+                            <span class="dominant-label">Dominant Direction:</span>
+                            <span class="dominant-value" id="dominantDirectionText">Mostly Stationary</span>
+                        </div>
+                    </div>
+
+                    <div id="noMovementMsg" style="display: none;" class="no-movement-text">
+                        No significant movement detected
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js?v=9"></script>
+</body>
+</html>
