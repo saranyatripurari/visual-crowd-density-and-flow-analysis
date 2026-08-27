@@ -64,7 +64,9 @@ The project includes:
 
 ### Backend
 
-- Flask
+- FastAPI
+- Uvicorn
+- Gunicorn
 
 ### Frontend
 
@@ -95,31 +97,42 @@ Visual-Crowd-Density-and-Flow-Analysis/
 │       └── csrnet.py
 │
 ├── models/
-│
-├── part_A_final/
-│
-├── part_B_final/
-│
+├── uploads/
 ├── outputs/
-│
+├── app.py
 ├── requirements.txt
 ├── .gitignore
 └── README.md
+```
 
-⚙️ How to Run Locally
-1. Clone the repository
-git clone https://github.com/saranyatripurari/visual-crowd-density-and-flow-analysis.git
-2. Navigate to the project
-cd visual-crowd-density-and-flow-analysis
-3. Install dependencies
-pip install -r requirements.txt
-4. Run the application
-python backend/app.py
-5. Open in browser
-http://127.0.0.1:5000
+## ⚙️ How to Run Locally
 
-Author
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/saranyatripurari/visual-crowd-density-and-flow-analysis.git
+   cd visual-crowd-density-and-flow-analysis
+   ```
 
-Saranya Tripurari
+2. **Install dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-GitHub: https://github.com/saranyatripurari
+3. **Run the application**:
+   ```bash
+   python app.py
+   ```
+
+4. **Open in browser**:
+   Navigate to [http://127.0.0.1:8000](http://127.0.0.1:8000)
+
+## 🌐 Deploying on Render
+
+- **Build Command**: `pip install -r requirements.txt`
+- **Start Command**: `uvicorn backend.app:app --host 0.0.0.0 --port $PORT`
+  *(or `gunicorn backend.app:app -w 1 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT`)*
+
+## Author
+
+**Saranya Tripurari**  
+GitHub: [https://github.com/saranyatripurari](https://github.com/saranyatripurari)
